@@ -1,0 +1,20 @@
+{
+  "[markdown]": {
+    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint",
+    "editor.formatOnSave": true
+  },
+  // 抑止設定
+  "markdownlint.config": {
+    "MD010": false, // タブ
+    "MD013": false // 長い行
+  },
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+
+  // Lean は elan(PATH 上)が lean-toolchain を読んでツールチェーンを解決する。
+  // nix develop / direnv で elan が PATH に入っていれば追加設定は不要。
+  "lean4.toolchainPath": "",
+  "github.copilot.enable": {
+    "lean4": false
+  }
+}

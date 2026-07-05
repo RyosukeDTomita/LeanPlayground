@@ -1,0 +1,11 @@
+.direnv/
+
+# https://github.com/github/gitignore/blob/main/community/Lean.gitignore
+# Lake (Lean 4 build tool)
+/.lake/
+/build/
+
+# Compiled object/intermediate files
+*.olean
+*.ilean
+*.trace

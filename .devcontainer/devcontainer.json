@@ -1,0 +1,21 @@
+{
+  "name": "Lean Development",
+  "dockerFile": "../Dockerfile",
+  "mounts": [
+    "source=nix-store,target=/nix,type=volume",
+    "source=direnv-cache,target=/home/vscode/.local/share/direnv,type=volume",
+    "source=elan-home,target=/home/vscode/.elan,type=volume"
+  ],
+  "postCreateCommand": "bash .devcontainer/postCreateCommand.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "leanprover.lean4",
+        "DavidAnson.vscode-markdownlint"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "zsh"
+      }
+    }
+  }
+}
