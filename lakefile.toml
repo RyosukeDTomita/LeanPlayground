@@ -2,8 +2,19 @@ name = "playground"
 version = "0.1.0"
 defaultTargets = ["playground"]
 
+# 数学ライブラリ Mathlib。Natural Number Game の ℕ 記法・補題名・tactic はこれに由来する。
+# lean-toolchain (v4.30.0) に一致するタグを pin する。更新時は両者を揃えること。
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+rev = "v4.30.0"
+
 [[lean_lib]]
 name = "Playground"
+
+# Natural Number Game の解答置き場。NaturalNumberGame/ 配下の Level*.lean を集約する。
+[[lean_lib]]
+name = "NaturalNumberGame"
 
 [[lean_exe]]
 name = "playground"

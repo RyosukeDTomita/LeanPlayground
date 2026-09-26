@@ -92,35 +92,60 @@ nix fmt
 
 ```text
 leanPlayground/
-├── flake.nix          # devShell 定義(elan + treefmt)
-├── lean-toolchain     # 使用する Lean のバージョン固定
-├── lakefile.toml      # lake(ビルドツール)の設定
-├── Main.lean          # 実行ファイルのエントリポイント
-├── Playground.lean    # ライブラリのルートモジュール
-└── Playground/
-    └── Basic.lean     # サンプルの定義・定理
+├── flake.nix               # devShell 定義(elan + treefmt)
+├── lean-toolchain          # 使用する Lean のバージョン固定
+├── lakefile.toml           # lake(ビルドツール)の設定
+├── Main.lean               # 実行ファイルのエントリポイント
+├── Playground.lean         # ライブラリのルートモジュール
+├── Playground/
+│   └── Basic.lean          # サンプルの定義・定理
+├── NaturalNumberGame.lean  # NNG 解答ライブラリのルートモジュール
+└── NaturalNumberGame/
+    ├── NngShim.lean        # NNG 固有補題(one_eq_succ_zero 等)を Nat 上に用意するシム
+    ├── Level1.lean         # Tutorial World の各レベルの解答
+    ├── Level2.lean
+    ├── ...
+    └── Level7.lean
+```
+
+> [!NOTE]
+> NNG4 はブラウザ上では独自型 `MyNat` と独自補題を使う。ここでは Mathlib の `Nat` 上に
+> 同名補題を [NngShim.lean](./NaturalNumberGame/NngShim.lean) で用意して解答を再現している。
+> また NNG の `rw` は書き換えるだけだが Lean 標準の `rw` は自動で `rfl` を試すため、
+> 数値レベル(Level3/4/7 等)では自動 `rfl` をしない `rewrite` を使っている。
+
+---
+
+## Natural Number Game の解答
+
+ブラウザ版 [Natural Number Game](https://adam.math.hhu.de/) の解答を [NaturalNumberGame/](./NaturalNumberGame) 配下に
+レベルごとに保存する。NNG の `ℕ` 記法・補題名・tactic は Mathlib に由来するため、
+このプロジェクトは Mathlib へ依存している(下記参照)。
+
+各レベルのファイルは `import Mathlib` して `example ... := by ...` を書くだけ。
+`lake build` で全レベルがコンパイル(証明チェック)される。
+
+```shell
+cd LeanPlayground
+lake build NaturalNumberGame
 ```
 
 ---
 
-## Mathlibを使いたくなったら
+## Mathlib
 
-数学ライブラリ [Mathlib](https://github.com/leanprover-community/mathlib4) を使う場合は
-[lakefile.toml](./lakefile.toml) に依存を追加する。
+数学ライブラリ [Mathlib](https://github.com/leanprover-community/mathlib4) は
+[lakefile.toml](./lakefile.toml) に依存として追加済み(NNG が使うため)。
+バージョンは lean-toolchain (`v4.30.0`) に一致するタグ `v4.30.0` を pin している。
 
-```toml
-[[require]]
-name = "mathlib"
-scope = "leanprover-community"
-```
-
-その後、ビルド済みキャッシュを取得してからビルドする(Mathlibのフルビルドは非常に重いため)。
+初回チェックアウト後は、ビルド済みキャッシュを取得してからビルドする(Mathlibのフルビルドは非常に重いため)。
 
 ```shell
-lake update
-lake exe cache get
+lake exe cache get   # Mathlib のビルド済み olean をダウンロード
 lake build
 ```
 
+依存を更新する場合は `lake update` を実行する。
+
 > [!WARNING]
-> Mathlibはlean-toolchainのバージョンに強く依存する。追加時は [Mathlibが要求するLeanバージョン](https://github.com/leanprover-community/mathlib4/blob/master/lean-toolchain) に [lean-toolchain](./lean-toolchain) を合わせること。
+> Mathlibはlean-toolchainのバージョンに強く依存する。更新時は [Mathlibが要求するLeanバージョン](https://github.com/leanprover-community/mathlib4/blob/master/lean-toolchain) に [lean-toolchain](./lean-toolchain) と `lakefile.toml` の `rev` を合わせること。
